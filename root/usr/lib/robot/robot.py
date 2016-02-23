@@ -525,27 +525,33 @@ def cmd_update_model(argv):
                       help="Choose the ROS distribution to use (default is Indigo)."
     (options, args) = parser.parse_args(argv)
 
-    versionNum = subprocess.check_output(["rosversion", "pr2_description"])
-    newFile = "/etc/ros/" + option.distro + "/urdf/pr2_" + versionNum + ".urdf.xacro"
+    version_num = subprocess.check_output(["rosversion", "pr2_description"])
+    version_num.decode("utf-8")
+    version_num = version_num[:-1]
+    new_file = "/home/alee/test/indigo/urdf/pr2_" + version_num + ".urdf.xacro"
 
-    if not os.path.isfile(newFile):
-        descriptionPath = subprocess.check_output(["rospack", "find", "pr2_description"])
-        copyfile(descriptionPath + "/robots/pr2.urdf.xacro", newFile)
+    if not os.path.isfile(new_file):
+        description_path = subprocess.check_output(["rospack", "find", "pr2_description"])
+        description_path.decode("utf-8")
+        description_path = description_path[:-1]
+        copy2(description_path + "/robots/pr2.urdf.xacro", new_file)
 
-        tgt_urdf = "/etc/ros/" + option.distro + "/urdf/robot.xml"
-        new_urdf = "/etc/ros/" + option.distro + "/urdf/robot_uncalibrated_" + versionNum + ".xml"
-        uncalibrated_urdf = "/etc/ros/" + option.distro + "/urdf/robot_uncalibrated.xml"
-        subprocess.check_call(["rosrun", "xacro", "xacro.py", newFile, ">", new_urdf])
+        tgt_urdf = "/home/alee/test/indigo/urdf/robot.xml"
+        new_urdf = "/home/alee/test/indigo/urdf/robot_uncalibrated_" + version_num + ".xml"
+        uncalibrated_urdf = "/home/alee/test/indigo/urdf/robot_uncalibrated.xml"
+        subprocess.call(["rosrun", "xacro", "xacro.py", "-o", new_urdf, new_file])
 
         if not os.path.isfile(tgt_urdf):
-            subprocess.check_call(["ln", "-sf", new_urdf, tgt_urdf])
+            subprocess.call(["ln", "-sf", new_urdf, tgt_urdf])
         else:
-            print >> sys.stderr, "robot.xml already exists!"
+            print "robot.xml already exists!"
 
         if not os.path.isfile(uncalibrated_urdf):
-            subprocess.check_call(["ln", "-sf", new_urdf, uncalibrated_urdf])
+            subprocess.call(["ln", "-sf", new_urdf, uncalibrated_urdf])
         else:
-            print >> sys.stderr, "robot_uncalibrated.xml already exists!"
+            print "robot_uncalibrated.xml already exists!"
+    else:
+        print "Newest version of pr2_description already exists!"
 
 
 class ActiveUser(object):
