@@ -528,7 +528,7 @@ def cmd_update_model(argv):
     versionNum = subprocess.check_output(["rosversion", "pr2_description"])
     newFile = "/etc/ros/" + option.distro + "/urdf/pr2_" + versionNum + ".urdf.xacro"
 
-    if !os.path.isfile(newFile):
+    if not os.path.isfile(newFile):
         descriptionPath = subprocess.check_output(["rospack", "find", "pr2_description"])
         copyfile(descriptionPath + "/robots/pr2.urdf.xacro", newFile)
 
@@ -537,12 +537,12 @@ def cmd_update_model(argv):
         uncalibrated_urdf = "/etc/ros/" + option.distro + "/urdf/robot_uncalibrated.xml"
         subprocess.check_call(["rosrun", "xacro", "xacro.py", newFile, ">", new_urdf])
 
-        if !os.path.isfile(tgt_urdf):
+        if not os.path.isfile(tgt_urdf):
             subprocess.check_call(["ln", "-sf", new_urdf, tgt_urdf])
         else:
             print >> sys.stderr, "robot.xml already exists!"
 
-        if !os.path.isfile(uncalibrated_urdf):
+        if not os.path.isfile(uncalibrated_urdf):
             subprocess.check_call(["ln", "-sf", new_urdf, uncalibrated_urdf])
         else:
             print >> sys.stderr, "robot_uncalibrated.xml already exists!"
