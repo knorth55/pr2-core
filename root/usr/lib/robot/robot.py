@@ -522,13 +522,13 @@ def cmd_update_model(argv):
     parser = OptionParser(usage="robot update_model",
                           description="Updates the robot models after any changes to pr2_description.")
     parser.add_option("-d", "--distro",   action="store", type="string", default="indigo", dest="distro",
-                      help="Choose the ROS distribution to use (default is Indigo)."
-    (options, args) = parser.parse_args(argv)
+                      help="Choose the ROS distribution to use (default is Indigo).")
+    (options,args) = parser.parse_args()
 
     version_num = subprocess.check_output(["rosversion", "pr2_description"])
     version_num.decode("utf-8")
     version_num = version_num[:-1]
-    new_file = "/home/alee/test/indigo/urdf/pr2_" + version_num + ".urdf.xacro"
+    new_file = "/etc/ros/indigo/urdf/pr2_" + version_num + ".urdf.xacro"
 
     if not os.path.isfile(new_file):
         description_path = subprocess.check_output(["rospack", "find", "pr2_description"])
@@ -536,9 +536,9 @@ def cmd_update_model(argv):
         description_path = description_path[:-1]
         copy2(description_path + "/robots/pr2.urdf.xacro", new_file)
 
-        tgt_urdf = "/home/alee/test/indigo/urdf/robot.xml"
-        new_urdf = "/home/alee/test/indigo/urdf/robot_uncalibrated_" + version_num + ".xml"
-        uncalibrated_urdf = "/home/alee/test/indigo/urdf/robot_uncalibrated.xml"
+        tgt_urdf = "/etc/ros/indigo/urdf/robot.xml"
+        new_urdf = "/etc/ros/indigo/urdf/robot_uncalibrated_" + version_num + ".xml"
+        uncalibrated_urdf = "/etc/ros/indigo/urdf/robot_uncalibrated.xml"
         subprocess.call(["rosrun", "xacro", "xacro.py", "-o", new_urdf, new_file])
 
         if not os.path.isfile(tgt_urdf):
@@ -880,3 +880,4 @@ if __name__ == '__main__':
     robotmain()
 
 # vim: set ts=4 sw=4 expandtab:
+
