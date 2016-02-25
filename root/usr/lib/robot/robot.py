@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-        
+
 from __future__ import with_statement
 
 #from optparse import OptionParser
@@ -16,6 +16,7 @@ import socket
 import string
 
 from optparse import OptionParser
+from shutil import copyfile
 import UserDict
 
 USERNAME = 'ros'
@@ -179,7 +180,7 @@ def cmd_groovy(argv):
     print stdout
 
     print "Your environment is configured to use /opt/ros/groovy/setup.bash and /etc/ros/distro is symbolically linked to /etc/ros/groovy"
-  
+
 def cmd_hydro(argv):
     parser = OptionParser(usage="robot hydro",
                           description="Changes the ROS distro for the PR2 to Hydro.")
@@ -196,7 +197,7 @@ def cmd_hydro(argv):
     set_rosdistro_cmd = ['ln', '-sf', '/etc/ros/hydro', '/etc/ros/distro']
     set_source_cmd = ['source', '/opt/ros/hydro/setup.bash']
     set_ros_env_loader = ['export', 'ROS_ENV_LOADER=/etc/ros/env.sh']
-    
+
     subprocess.Popen(set_rosdistro_cmd, stdout = subprocess.PIPE)
     print stdout
     subprocess.Popen(set_source_cmd, stdout = subprocess.PIPE)
@@ -232,7 +233,7 @@ def cmd_start(argv):
         if 'ROS_ROOT' not in os.environ:
             print >> sys.stderr, "ROS_ROOT not set"
             sys.exit(1)
-        
+
         if 'ROS_PACKAGE_PATH' not in os.environ:
             print >> sys.stderr, "ROS_PACKAGE_PATH not set"
             sys.exit(1)
@@ -260,7 +261,7 @@ def cmd_start(argv):
 
     else:
         env = {}
-        
+
         newenv = subprocess.Popen('. /etc/ros/setup.sh; env', shell=True, executable='/bin/sh', env=env, stdout=subprocess.PIPE).communicate()[0]
         for k,v in [l.split('=') for l in newenv.splitlines()]:
             env[k] = v
@@ -517,6 +518,41 @@ def cmd_plist(argv):
         print >> sys.stderr, "Could not run ckill to check process list.  Check if c2 is reachable"
         sys.exit(3)
 
+def cmd_update_model(argv):
+    parser = OptionParser(usage="robot update_model",
+                          description="Updates the robot models after any changes to pr2_description.")
+    parser.add_option("-d", "--distro",   action="store", type="string", default="indigo", dest="distro",
+                      help="Choose the ROS distribution to use (default is Indigo).")
+    (options,args) = parser.parse_args()
+
+    version_num = subprocess.check_output(["rosversion", "pr2_description"])
+    version_num.decode("utf-8")
+    version_num = version_num[:-1]
+    new_file = "/etc/ros/indigo/urdf/pr2_" + version_num + ".urdf.xacro"
+
+    if not os.path.isfile(new_file):
+        description_path = subprocess.check_output(["rospack", "find", "pr2_description"])
+        description_path.decode("utf-8")
+        description_path = description_path[:-1]
+        copy2(description_path + "/robots/pr2.urdf.xacro", new_file)
+
+        tgt_urdf = "/etc/ros/indigo/urdf/robot.xml"
+        new_urdf = "/etc/ros/indigo/urdf/robot_uncalibrated_" + version_num + ".xml"
+        uncalibrated_urdf = "/etc/ros/indigo/urdf/robot_uncalibrated.xml"
+        subprocess.call(["rosrun", "xacro", "xacro.py", "-o", new_urdf, new_file])
+
+        if not os.path.isfile(tgt_urdf):
+            subprocess.call(["ln", "-sf", new_urdf, tgt_urdf])
+        else:
+            print "robot.xml already exists!"
+
+        if not os.path.isfile(uncalibrated_urdf):
+            subprocess.call(["ln", "-sf", new_urdf, uncalibrated_urdf])
+        else:
+            print "robot_uncalibrated.xml already exists!"
+    else:
+        print "Newest version of pr2_description already exists!"
+
 
 class ActiveUser(object):
     def __init__(self):
@@ -605,7 +641,7 @@ def load_active():
 
 def kill_count():
     ckill_list = plist()
-    
+
     if ckill_list is not None:
         return len(ckill_list)
     else:
@@ -820,6 +856,7 @@ def robotmain(argv=None):
     cmds['dash']     = (cmd_dash, '')
     cmds['hydro']    = (cmd_hydro, 'Changes the ROS Environment to Hydro; An ease of use command')
     cmds['groovy']   = (cmd_groovy, 'Changes the ROS Environment to Groovy; An ease of use command')
+    cmds['update_model'] = (cmd_update_model, 'Updates PR2 urdf after updates to pr2_description')
 
     if argv is None:
         argv=sys.argv
@@ -843,3 +880,4 @@ if __name__ == '__main__':
     robotmain()
 
 # vim: set ts=4 sw=4 expandtab:
+
