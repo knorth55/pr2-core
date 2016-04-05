@@ -530,7 +530,7 @@ def cmd_update_model(argv):
 
     version_num.decode("utf-8")
     version_num = version_num[:-1]
-    new_file = "/etc/ros/indigo/urdf/pr2_" + version_num + ".urdf.xacro"
+    new_file = "/etc/ros/" + distro + "/urdf/pr2_" + version_num + ".urdf.xacro"
 
     if not os.path.isfile(new_file):
         pkg = rospkg.RosPack()
@@ -539,9 +539,9 @@ def cmd_update_model(argv):
 
         os.system("cp " + pkg_path + "/robots/pr2.urdf.xacro " + new_file)
 
-        tgt_urdf = "/etc/ros/indigo/urdf/robot.xml"
-        new_urdf = "/etc/ros/indigo/urdf/robot_uncalibrated_" + version_num + ".xml"
-        uncalibrated_urdf = "/etc/ros/indigo/urdf/robot_uncalibrated.xml"
+        tgt_urdf = "/etc/ros/" + distro + "/urdf/robot.xml"
+        new_urdf = "/etc/ros/" + distro + "/urdf/robot_uncalibrated_" + version_num + ".xml"
+        uncalibrated_urdf = "/etc/ros/" + distro + "/urdf/robot_uncalibrated.xml"
 
         subprocess.call(["rosrun", "xacro", "xacro.py", "-o", new_urdf, new_file])
 
