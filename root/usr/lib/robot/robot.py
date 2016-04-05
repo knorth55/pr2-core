@@ -17,7 +17,6 @@ import string
 import rospkg
 
 from optparse import OptionParser
-from shutil import copyfile
 import UserDict
 
 USERNAME = 'ros'
