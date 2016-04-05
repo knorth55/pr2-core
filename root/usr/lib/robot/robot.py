@@ -14,6 +14,7 @@ import time
 import yaml
 import socket
 import string
+import rospkg
 
 from optparse import OptionParser
 from shutil import copyfile
@@ -526,30 +527,29 @@ def cmd_update_model(argv):
     (options,args) = parser.parse_args()
 
     version_num = subprocess.check_output(["rosversion", "pr2_description"])
+
     version_num.decode("utf-8")
     version_num = version_num[:-1]
     new_file = "/etc/ros/indigo/urdf/pr2_" + version_num + ".urdf.xacro"
 
     if not os.path.isfile(new_file):
-        description_path = subprocess.check_output(["rospack", "find", "pr2_description"])
-        description_path.decode("utf-8")
-        description_path = description_path[:-1]
-        copy2(description_path + "/robots/pr2.urdf.xacro", new_file)
+        pkg = rospkg.RosPack()
+        pkg_path = pkg.get_path('pr2_description')
+        print pkg_path
+
+        os.system("cp " + pkg_path + "/robots/pr2.urdf.xacro " + new_file)
 
         tgt_urdf = "/etc/ros/indigo/urdf/robot.xml"
         new_urdf = "/etc/ros/indigo/urdf/robot_uncalibrated_" + version_num + ".xml"
         uncalibrated_urdf = "/etc/ros/indigo/urdf/robot_uncalibrated.xml"
+
         subprocess.call(["rosrun", "xacro", "xacro.py", "-o", new_urdf, new_file])
 
-        if not os.path.isfile(tgt_urdf):
-            subprocess.call(["ln", "-sf", new_urdf, tgt_urdf])
-        else:
-            print "robot.xml already exists!"
+        subprocess.call(["rm", tgt_urdf])
+        subprocess.call(["ln", "-sf", new_urdf, tgt_urdf])
+        subprocess.call(["rm", uncalibrated_urdf])
+        subprocess.call(["ln", "-sf", new_urdf, uncalibrated_urdf])
 
-        if not os.path.isfile(uncalibrated_urdf):
-            subprocess.call(["ln", "-sf", new_urdf, uncalibrated_urdf])
-        else:
-            print "robot_uncalibrated.xml already exists!"
     else:
         print "Newest version of pr2_description already exists!"
 
