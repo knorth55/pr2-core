@@ -527,7 +527,6 @@ def cmd_update_model(argv):
     (options,args) = parser.parse_args()
 
     version_num = subprocess.check_output(["rosversion", "pr2_description"])
-
     version_num.decode("utf-8")
     version_num = version_num[:-1]
     new_file = "/etc/ros/" + distro + "/urdf/pr2_" + version_num + ".urdf.xacro"
