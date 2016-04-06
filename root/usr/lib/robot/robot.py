@@ -521,27 +521,27 @@ def cmd_plist(argv):
 def cmd_update_model(argv):
     parser = OptionParser(usage="robot update_model",
                           description="Updates the robot models after any changes to pr2_description.")
-    parser.add_option("-d", "--distro",   action="store", type="string", default="indigo", dest="distro",
+    parser.add_option("-d", "--distro", action="store", type="string", default="indigo", dest="distro",
                       help="Choose the ROS distribution to use (default is Indigo).")
     (options,args) = parser.parse_args()
 
     version_num = subprocess.check_output(["rosversion", "pr2_description"])
     version_num.decode("utf-8")
     version_num = version_num[:-1]
-    new_file = "/etc/ros/" + distro + "/urdf/pr2_" + version_num + ".urdf.xacro"
+    new_file = "/etc/ros/" + options.distro + "/urdf/pr2_" + version_num + ".urdf.xacro"
 
     if not os.path.isfile(new_file):
         pkg = rospkg.RosPack()
         pkg_path = pkg.get_path('pr2_description')
         print pkg_path
 
-        os.chmod("/etc/ros/" + distro + "/urdf", 0666)
+        os.chmod("/etc/ros/" + options.distro + "/urdf", 0666)
 
         os.system("cp " + pkg_path + "/robots/pr2.urdf.xacro " + new_file)
 
-        tgt_urdf = "/etc/ros/" + distro + "/urdf/robot.xml"
-        new_urdf = "/etc/ros/" + distro + "/urdf/robot_uncalibrated_" + version_num + ".xml"
-        uncalibrated_urdf = "/etc/ros/" + distro + "/urdf/robot_uncalibrated.xml"
+        tgt_urdf = "/etc/ros/" + options.distro + "/urdf/robot.xml"
+        new_urdf = "/etc/ros/" + options.distro + "/urdf/robot_uncalibrated_" + version_num + ".xml"
+        uncalibrated_urdf = "/etc/ros/" + options.distro + "/urdf/robot_uncalibrated.xml"
 
         subprocess.call(["rosrun", "xacro", "xacro.py", "-o", new_urdf, new_file])
 
