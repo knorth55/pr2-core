@@ -535,8 +535,6 @@ def cmd_update_model(argv):
         pkg_path = pkg.get_path('pr2_description')
         print pkg_path
 
-        os.chmod("/etc/ros/" + options.distro + "/urdf", 0666)
-
         os.system("cp " + pkg_path + "/robots/pr2.urdf.xacro " + new_file)
 
         tgt_urdf = "/etc/ros/" + options.distro + "/urdf/robot.xml"
