@@ -533,7 +533,6 @@ def cmd_update_model(argv):
     if not os.path.isfile(new_file):
         pkg = rospkg.RosPack()
         pkg_path = pkg.get_path('pr2_description')
-        print pkg_path
 
         os.system("cp " + pkg_path + "/robots/pr2.urdf.xacro " + new_file)
 
