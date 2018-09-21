@@ -1,4 +1,4 @@
-pr2-core (0.5.45-precise) stable; urgency=low
+pr2-core (0.5.45-xenial) stable; urgency=low
 
   * Incrementing to SVN: r1081
   - r1081: No longer using SVN, find the updates at https://github.com/pr2-debs/
