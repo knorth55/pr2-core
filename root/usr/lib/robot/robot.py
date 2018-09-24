@@ -816,10 +816,10 @@ def robotmain(argv=None):
     cmds['plist']    = (cmd_plist,   'Show all processes running on the robot.')
     cmds['love']     = (cmd_love,   '')
     cmds['kill']     = (cmd_stop,    '')
-    cmds['sudoaptgetbrycefixit'] = (cmd_sudoaptgetbrycefixit, '')
-    cmds['dash']     = (cmd_dash, '')
-    cmds['hydro']    = (cmd_hydro, 'Changes the ROS Environment to Hydro; An ease of use command')
-    cmds['groovy']   = (cmd_groovy, 'Changes the ROS Environment to Groovy; An ease of use command')
+    #cmds['sudoaptgetbrycefixit'] = (cmd_sudoaptgetbrycefixit, '')
+    #cmds['dash']     = (cmd_dash, '')
+    #cmds['hydro']    = (cmd_hydro, 'Changes the ROS Environment to Hydro; An ease of use command')
+    #cmds['groovy']   = (cmd_groovy, 'Changes the ROS Environment to Groovy; An ease of use command')
 
     if argv is None:
         argv=sys.argv
