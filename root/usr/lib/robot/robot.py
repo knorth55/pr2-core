@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
         
 from __future__ import with_statement
 
@@ -42,24 +42,24 @@ class RobotCmds(UserDict.UserDict):
         argv = [a for a in argv if a != '-h' and a != '--help']
 
         if len(argv) == 0:
-            print """Usage: robot <command> [options] [args]
-"""
-            print self.get_valid_cmds()
+            print("""Usage: robot <command> [options] [args]
+""")
+            print(self.get_valid_cmds())
         else:
             cmd = argv[0]
             if cmd in self:
-                print "Calling %s with -h"%cmd
+                print("Calling %s with -h"%cmd)
                 self[cmd][0](["-h"])
             else:
-                print >> sys.stderr, "Invalid command: %s"%cmd
-                print >> sys.stderr, ""
-                print >> sys.stderr, self.get_valid_cmds()
+                print("Invalid command: %s"%cmd, file=sys.stderr)
+                print("", file=sys.stderr)
+                print(self.get_valid_cmds, file=sys.stderr)
 
 def generate_env_loader():
-    print
+    print("")
     resp = raw_input("Would you like to create an env-loader? (y/n): ")
     if resp.lower()=='y':
-        print
+        print("")
         setup = raw_input("Enter the path to your setup.sh file: ")
         while not os.path.exists(os.path.expandvars(os.path.expanduser(setup))):
             setup = raw_input("%s does not exist. Enter the path to your setup file: "%setup)
@@ -67,23 +67,23 @@ def generate_env_loader():
         path = os.path.expanduser(path)
         path = os.path.expandvars(path)
         path = os.path.join(path, "env.sh")
-        print
+        print("")
         resp = raw_input("Would you like to use your current ROS_PACKAGE_PATH? (y/n): ")
 
         # while path is invalid
         while os.path.exists(path) or not os.access(os.path.dirname(path), os.W_OK):
             if not os.access(os.path.dirname(path), os.W_OK):
-                print
+                print("")
                 path = raw_input("%s isn't writable. Enter a path for your env-loader: "%path)
                 path = os.path.expanduser(path)
                 path = os.path.expandvars(path)
             elif os.path.exists(path):
-                print
+                print("")
                 replace = raw_input("%s exists. Would you like to replace it? (y/n): "%path)
                 if replace.lower()=="y":
                     os.remove(path)
                 else:
-                    print
+                    print("")
                     path = raw_input("Enter a path for your env-loader: ")
                     path = os.path.expanduser(path)
                     path = os.path.expandvars(path)
@@ -103,12 +103,12 @@ def generate_env_loader():
         # set executable
         os.chmod(path, stat.S_IXUSR | stat.S_IRUSR | stat.S_IWUSR)
 
-        print
-        print "Your env-loader has been created as %s."%path
-        print "Please add 'export ROS_ENV_LOADER=\"%s\"' to your .bashrc"%path
+        print("")
+        print("Your env-loader has been created as %s."%path)
+        print("Please add 'export ROS_ENV_LOADER=\"%s\"' to your .bashrc"%path)
     else:
-        print
-        print "No ROS_ENV_LOADER set and no env-loader created."
+        print("")
+        print("No ROS_ENV_LOADER set and no env-loader created.")
 
 
 def cmd_claim(argv):
@@ -148,11 +148,11 @@ def cmd_release(argv):
     if not check_claim(options.user, options.force):
         sys.exit(2)
 
-    print "Releasing control of the robot."
+    print("Releasing control of the robot.")
 
     try:
         os.remove(ACTIVE_USER_FILE)
-    except OSError, e:
+    except OSError:
         pass
 
 
@@ -167,18 +167,18 @@ def cmd_groovy(argv):
     if not check_claim(options.user, options.force):
         sys.exit(2)
 
-    print "Setting your ROS Environment to ROS Groovy"
+    print("Setting your ROS Environment to ROS Groovy")
 
     set_rosdistro_cmd = ['ln', '-sf', '/etc/ros/groovy', '/etc/ros/distro']
     set_source_cmd = ['source', '/opt/ros/groovy/setup.bash']
     set_ros_env_loader = ['export', 'ROS_ENV_LOADER=/etc/ros/env.sh']
 
     subprocess.Popen(set_rosdistro_cmd, stdout = subprocess.PIPE)
-    print stdout
+    print(stdout)
     subprocess.Popen(set_source_cmd, stdout = subprocess.PIPE)
-    print stdout
+    print(stdout)
 
-    print "Your environment is configured to use /opt/ros/groovy/setup.bash and /etc/ros/distro is symbolically linked to /etc/ros/groovy"
+    print("Your environment is configured to use /opt/ros/groovy/setup.bash and /etc/ros/distro is symbolically linked to /etc/ros/groovy")
   
 def cmd_hydro(argv):
     parser = OptionParser(usage="robot hydro",
@@ -191,18 +191,18 @@ def cmd_hydro(argv):
     if not check_claim(options.user, options.force):
         sys.exit(2)
 
-    print "Setting your ROS Environment to ROS Hydro"
+    print("Setting your ROS Environment to ROS Hydro")
 
     set_rosdistro_cmd = ['ln', '-sf', '/etc/ros/hydro', '/etc/ros/distro']
     set_source_cmd = ['source', '/opt/ros/hydro/setup.bash']
     set_ros_env_loader = ['export', 'ROS_ENV_LOADER=/etc/ros/env.sh']
     
     subprocess.Popen(set_rosdistro_cmd, stdout = subprocess.PIPE)
-    print stdout
+    print(stdout)
     subprocess.Popen(set_source_cmd, stdout = subprocess.PIPE)
-    print stdout
+    print(stdout)
 
-    print "Your environment is configured to use /opt/ros/hydro/setup.bash and /etc/ros/distro is symbolically linked to /etc/ros/hydro"
+    print("Your environment is configured to use /opt/ros/hydro/setup.bash and /etc/ros/distro is symbolically linked to /etc/ros/hydro")
 
 
 def cmd_start(argv):
@@ -230,23 +230,23 @@ def cmd_start(argv):
 
     if not options.system:
         if 'ROS_ROOT' not in os.environ:
-            print >> sys.stderr, "ROS_ROOT not set"
+            print("ROS_ROOT not set", file=sys.stderr)
             sys.exit(1)
         
         if 'ROS_PACKAGE_PATH' not in os.environ:
-            print >> sys.stderr, "ROS_PACKAGE_PATH not set"
+            print("ROS_PACKAGE_PATH not set", file=sys.stderr)
             sys.exit(1)
 
         if 'ROS_MASTER_URI' not in os.environ:
-            print >> sys.stderr, "ROS_MASTER_URI not set"
+            print("ROS_MASTER_URI not set", file=sys.stderr)
             sys.exit(1)
 
         if 'ROS_ENV_LOADER' not in os.environ:
             if "fuerte" in os.environ['ROS_PACKAGE_PATH'] or "groovy" in os.environ['ROS_PACKAGE_PATH']:
-                print
-                print "ROS_ENV_LOADER not set; see http://ros.org/wiki/roslaunch/XML/machine#Examples"
-                print
-                print "Would you like to use the default env-loader?"
+                print("")
+                print("ROS_ENV_LOADER not set; see http://ros.org/wiki/roslaunch/XML/machine#Examples")
+                print("")
+                print("Would you like to use the default env-loader?")
                 resp = raw_input("You will not be able to run custom software (y/n): ")
                 if resp.lower()=='y':
                     os.environ['ROS_ENV_LOADER'] = '/etc/ros/env.sh'
@@ -272,16 +272,16 @@ def cmd_start(argv):
     if ckill_prompt(options.force):
         ckill()
 
-        print "Using environment:"
-        print "ROS_ROOT="+env['ROS_ROOT']
-        print "ROS_PACKAGE_PATH="+env['ROS_PACKAGE_PATH']
-        print "USER="+env['USER']
-        print "HOME="+env['HOME']
+        print("Using environment:")
+        print("ROS_ROOT="+env['ROS_ROOT'])
+        print("ROS_PACKAGE_PATH="+env['ROS_PACKAGE_PATH'])
+        print("USER="+env['USER'])
+        print("HOME="+env['HOME'])
         if env.has_key('LIBRARY_PATH'):
-            print "LD_LIBRARY_PATH="+env['LIBRARY_PATH']
+            print("LD_LIBRARY_PATH="+env['LIBRARY_PATH'])
 
-        print "Launching necessary ROS processes in background."
-        print "Check your pr2_dashboard for status information."
+        print("Launching necessary ROS processes in background.")
+        print("Check your pr2_dashboard for status information.")
 
         if not options.debug:
             daemonize()
@@ -320,13 +320,13 @@ def cmd_stop(argv):
     if ckill_prompt(options.force):
         ckill()
 
-        print "If you are done using the robot, it is recommended that you run 'robot release'"
+        print("If you are done using the robot, it is recommended that you run 'robot release'")
 
     sys.exit(0)
 
 
 def cmd_dash(argv):
-    print """
+    print("""
 MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 MMMMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 MMMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMMMMMMMNMMMMMMMMMMM
@@ -366,11 +366,11 @@ our work.
 
 To the stars we must go
 
-"""
+""")
     sys.exit(0)
 
 def cmd_sudoaptgetbrycefixit(argv):
-    print """
+    print("""
 MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 MMMMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 MMMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMMMMMMMNMMMMMMMMMMM
@@ -398,13 +398,13 @@ MMMMMMMMMMMMNNNNNNNNNNNNNNNNNNNNNNNNNNMMMMMMMMMMMM
 MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 Email Bryce (bvondervoort@clearpathrobotics.com).
 He'll fix it.
-"""
+""")
     sys.exit(0)
 
 def cmd_love(argv):
     p = subprocess.Popen(['fortune', 'love'], stdout=subprocess.PIPE)
     (out, err) = p.communicate()
-    print """
+    print("""
           |  \ \ | |/ /
           |  |\ `' ' /
           |  ;'      \      / ,
@@ -425,8 +425,8 @@ def cmd_love(argv):
           |  |  `-.        ;;;;,;' FL
           |  |    |`-.._  ,;;;;;'
           |  |    |   | ``';;;'
-"""
-    print out
+""")
+    print(out)
     sys.exit(0)
 
 
@@ -462,13 +462,13 @@ def send_mail(address, subject, msg):
 def users(noplist=False):
     users = {}
 
-    print ""
+    print("")
 
     a = load_active()
     if a is not None:
-        print a
+        print(a)
     else:
-        print 'Active User: None'
+        print('Active User: None')
 
     if not noplist:
         ckill_list = plist()
@@ -481,19 +481,19 @@ def users(noplist=False):
                 else:
                     users[user] = 1
 
-            print ""
+            print("")
 
             if len(users.keys()) > 0:
-                print "The following users have running processes:"
+                print("The following users have running processes:")
                 for key,val in users.iteritems():
-                    print " * %s (%d)"%(key,val)
+                    print(" * %s (%d)"%(key,val))
             else:
-                print "No non-system processes running."
+                print("No non-system processes running.")
 
         else:
-            print >> sys.stderr, "Could not get listing of users"
+            print("Could not get listing of users", file=sys.stderr)
 
-    print ""
+    print("")
 
 
 def cmd_plist(argv):
@@ -506,15 +506,15 @@ def cmd_plist(argv):
 
     if kill_list is not None:
         if len(kill_list) > 0:
-            print "The following processes are running:"
+            print("The following processes are running:")
             for l in kill_list:
-                print l
+                print(l)
         else:
-            print "No processes running."
+            print("No processes running.")
 
         sys.exit(0)
     else:
-        print >> sys.stderr, "Could not run ckill to check process list.  Check if c2 is reachable"
+        print("Could not run ckill to check process list.  Check if c2 is reachable", file=sys.stderr)
         sys.exit(3)
 
 
@@ -544,7 +544,7 @@ class ActiveUser(object):
 
         try:
             os.remove(ACTIVE_USER_FILE)
-        except OSError, e:
+        except OSError:
             pass
 
         active = open(ACTIVE_USER_FILE,'w')
@@ -634,7 +634,7 @@ def check_claim(user, force):
     old_active = load_active()
 
     if old_active is None or old_active.user != this_user.user:
-        print >> sys.stderr, "To run this command you must first claim the robot: robot claim"
+        print("To run this command you must first claim the robot: robot claim", file=sys.stderr)
         return False
 
     return True
@@ -655,20 +655,20 @@ def claim(user, email, message, force):
     old_active = load_active()
 
     if old_active is None:
-        print "Taking control of the robot."
+        print("Taking control of the robot.")
         new_active.set_active()
     elif old_active.user != new_active.user:
-        print "%s currently has control of the robot."%(old_active.user)
+        print("%s currently has control of the robot."%(old_active.user))
         if not force:
             while True:
                 yesno = raw_input("Do you wish to replace them? [(y)es/(n)o]:")
                 if yesno.lower()=="y" or yesno.lower()=="yes":
                     break
                 elif yesno.lower()=="n" or yesno.lower()=="no":
-                    print "Aborting..."
+                    print("Aborting...")
                     sys.exit(1)
 
-        print "Stealing control of the robot from %s."%old_active.user
+        print("Stealing control of the robot from %s."%old_active.user)
         if old_active.email is not None:
             send_mail(old_active.email,"Lost control of robot to: %s"%new_active.user,new_active.message)
         new_active.set_active()
@@ -683,22 +683,22 @@ def ckill_prompt(force):
     count = kill_count()
 
     if count is None:
-        print >> sys.stderr, "Could not run ckill.  Check if c2 is up."
+        print("Could not run ckill.  Check if c2 is up.", file=sys.stderr)
         sys.exit(3)
 
     if count > 0:
         users()
-        print ""
+        print("")
         while True:
             yesno = raw_input("Kill these processes? [(y)es/(n)o/(s)how]:")
             if yesno.lower()=="y" or yesno.lower()=="yes":
                 return True
             elif yesno.lower()=="n" or yesno.lower()=="no":
-                print "Aborting..."
+                print("Aborting...")
                 return False
             elif yesno.lower()=='s' or yesno.lower()=='show':
                 for l in plist():
-                    print l
+                    print(l)
     else:
         return True
 
@@ -708,7 +708,7 @@ def ckill():
     count = kill_count()
 
     if count is None:
-        print >> sys.stderr, "Could not run ckill."
+        print("Could not run ckill.", file=sys.stderr)
         sys.exit(3)
 
     # Only need to actually do the killing if the count was > 0
@@ -718,10 +718,10 @@ def ckill():
         progress = 0.
 
         lev='SIGINT'
-        print "Killing %d processes now..."%(total_count)
+        print("Killing %d processes now..."%(total_count))
 
 
-        print string.center("PROGRESS",total_progress,"=")
+        print(string.center("PROGRESS",total_progress,"="))
 
         # Start by killing all roslaunch processes
         subprocess.call(['sudo', 'ckill', 'kill', '--sig', lev, '--regex', 'python .*/roslaunch'])
@@ -744,15 +744,15 @@ def ckill():
                 if (time.time() - start > 3):
                     subprocess.call(['sudo', 'ckill', 'kill', '--sig', lev])
                     break
-        print ""
+        print("")
         if (count > 0):
-            print "Some processes may have been left running:"
+            print("Some processes may have been left running:")
             for l in plist():
-                print l
+                print(l)
         else:
-            print "All processes killed successfully."
+            print("All processes killed successfully.")
     else:
-        print "No processes to kill."
+        print("No processes to kill.")
 
 
 def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
@@ -761,7 +761,7 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
         pid = os.fork( )
         if pid > 0:
             sys.exit(0) # Exit first parent.
-    except OSError, e:
+    except OSError as e:
         sys.stderr.write("fork #1 failed: (%d) %sn" % (e.errno, e.strerror))
         sys.exit(1)
     # Decouple from parent environment.
@@ -773,7 +773,7 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
         pid = os.fork( )
         if pid > 0:
             sys.exit(0) # Exit second parent.
-    except OSError, e:
+    except OSError as e:
         sys.stderr.write("fork #2 failed: (%d) %sn" % (e.errno, e.strerror))
         sys.exit(1)
     # The process is now daemonized, redirect standard file descriptors.
@@ -788,22 +788,22 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
 
 def checkslave():
     if (os.path.exists('/etc/slave')):
-        print >> sys.stderr, "This robot command should not be run on c2."
+        print("This robot command should not be run on c2.", file=sys.stderr)
         sys.exit(1)
 
 def robotmain(argv=None):
 
     user_uid = os.getuid()
     if (user_uid == 0):
-        print >> sys.stderr, "The robot command should no longer be run as root or with sudo."
+        print("The robot command should no longer be run as root or with sudo.", file=sys.stderr)
         sys.exit(1)
 
     try:
         fd = open(TEST_WRITE_FILE,'w')
         fd.close()
         os.remove(TEST_WRITE_FILE)
-    except IOError, e:
-        print >> sys.stderr, "The robot command must be able to write to %s.  Check that %s and robot are both group robot, and that robot is setgid"%(ACTIVE_USER_FILE, ACTIVE_USER_FILE)
+    except IOError:
+        print("The robot command must be able to write to %s.  Check that %s and robot are both group robot, and that robot is setgid"%(ACTIVE_USER_FILE, ACTIVE_USER_FILE), file=sys.stderr)
         sys.exit(1)
 
 
