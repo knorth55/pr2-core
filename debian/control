@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: pr2-core
 Architecture: any
-Depends: python, pr2-users, pr2-core-impl, fortunes, fortune-mod
+Depends: python3, pr2-users, pr2-core-impl, fortunes, fortune-mod
 Description: Provides pr2 and pr2_admin utilities for the pr2
 Provides: ${diverted-files}
 Conflicts: ${diverted-files}
