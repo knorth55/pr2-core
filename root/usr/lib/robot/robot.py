@@ -16,7 +16,7 @@ import socket
 import string
 
 from optparse import OptionParser
-import UserDict
+from collections import UserDict
 
 USERNAME = 'ros'
 PID_FILE = '/var/tmp/ros.pid'
@@ -25,9 +25,9 @@ TEST_WRITE_FILE = '/var/lib/robot/testwrite'
 MIN_UID=1000
 
 
-class RobotCmds(UserDict.UserDict):
+class RobotCmds(UserDict):
     def __init__(self):
-        UserDict.UserDict.__init__(self)
+        UserDict.__init__(self)
         self['help'] = (self.help_cmd, "Display this message")
 
 
