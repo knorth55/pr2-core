@@ -1,3 +1,9 @@
+pr2-core (0.5.46-focal) stable; urgency=medium
+
+  * Updating to noetic
+
+ -- Shingo Kitagawa <shingogo@hotmail.co.jp>  Tue, 17 May 2022 23:34:11 +0900
+
 pr2-core (0.5.45-precise) stable; urgency=low
 
   * Incrementing to SVN: r1081
