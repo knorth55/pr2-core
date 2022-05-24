@@ -13,7 +13,6 @@ import signal
 import time
 import yaml
 import socket
-import string
 
 from optparse import OptionParser
 from collections import UserDict
@@ -567,7 +566,7 @@ def ckill():
         print("Killing %d processes now..."%(total_count))
 
 
-        print(string.center("PROGRESS",total_progress,"="))
+        print("PROGRESS".center(total_progress,"="))
 
         # Start by killing all roslaunch processes
         subprocess.call(['sudo', 'ckill', 'kill', '--sig', lev, '--regex', 'python .*/roslaunch'])
