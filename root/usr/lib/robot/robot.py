@@ -569,7 +569,7 @@ def ckill():
         print("PROGRESS".center(total_progress,"="))
 
         # Start by killing all roslaunch processes
-        subprocess.call(['sudo', 'ckill', 'kill', '--sig', lev, '--regex', 'python .*/roslaunch'])
+        subprocess.call(['sudo', 'ckill', 'kill', '--sig', lev, '--regex', 'python3 .*/roslaunch'])
 
         for lev in ['SIGINT','SIGTERM','SIGKILL','SIGKILL']:
             start = time.time()
