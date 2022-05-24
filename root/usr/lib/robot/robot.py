@@ -57,34 +57,34 @@ class RobotCmds(UserDict):
 
 def generate_env_loader():
     print("")
-    resp = raw_input("Would you like to create an env-loader? (y/n): ")
+    resp = input("Would you like to create an env-loader? (y/n): ")
     if resp.lower()=='y':
         print("")
-        setup = raw_input("Enter the path to your setup.sh file: ")
+        setup = input("Enter the path to your setup.sh file: ")
         while not os.path.exists(os.path.expandvars(os.path.expanduser(setup))):
-            setup = raw_input("%s does not exist. Enter the path to your setup file: "%setup)
+            setup = input("%s does not exist. Enter the path to your setup file: "%setup)
         path = os.path.dirname(setup)
         path = os.path.expanduser(path)
         path = os.path.expandvars(path)
         path = os.path.join(path, "env.sh")
         print("")
-        resp = raw_input("Would you like to use your current ROS_PACKAGE_PATH? (y/n): ")
+        resp = input("Would you like to use your current ROS_PACKAGE_PATH? (y/n): ")
 
         # while path is invalid
         while os.path.exists(path) or not os.access(os.path.dirname(path), os.W_OK):
             if not os.access(os.path.dirname(path), os.W_OK):
                 print("")
-                path = raw_input("%s isn't writable. Enter a path for your env-loader: "%path)
+                path = input("%s isn't writable. Enter a path for your env-loader: "%path)
                 path = os.path.expanduser(path)
                 path = os.path.expandvars(path)
             elif os.path.exists(path):
                 print("")
-                replace = raw_input("%s exists. Would you like to replace it? (y/n): "%path)
+                replace = input("%s exists. Would you like to replace it? (y/n): "%path)
                 if replace.lower()=="y":
                     os.remove(path)
                 else:
                     print("")
-                    path = raw_input("Enter a path for your env-loader: ")
+                    path = input("Enter a path for your env-loader: ")
                     path = os.path.expanduser(path)
                     path = os.path.expandvars(path)
 
@@ -247,7 +247,7 @@ def cmd_start(argv):
                 print("ROS_ENV_LOADER not set; see http://ros.org/wiki/roslaunch/XML/machine#Examples")
                 print("")
                 print("Would you like to use the default env-loader?")
-                resp = raw_input("You will not be able to run custom software (y/n): ")
+                resp = input("You will not be able to run custom software (y/n): ")
                 if resp.lower()=='y':
                     os.environ['ROS_ENV_LOADER'] = '/etc/ros/env.sh'
                 else:
@@ -661,7 +661,7 @@ def claim(user, email, message, force):
         print("%s currently has control of the robot."%(old_active.user))
         if not force:
             while True:
-                yesno = raw_input("Do you wish to replace them? [(y)es/(n)o]:")
+                yesno = input("Do you wish to replace them? [(y)es/(n)o]:")
                 if yesno.lower()=="y" or yesno.lower()=="yes":
                     break
                 elif yesno.lower()=="n" or yesno.lower()=="no":
@@ -690,7 +690,7 @@ def ckill_prompt(force):
         users()
         print("")
         while True:
-            yesno = raw_input("Kill these processes? [(y)es/(n)o/(s)how]:")
+            yesno = input("Kill these processes? [(y)es/(n)o/(s)how]:")
             if yesno.lower()=="y" or yesno.lower()=="yes":
                 return True
             elif yesno.lower()=="n" or yesno.lower()=="no":
