@@ -156,55 +156,6 @@ def cmd_release(argv):
         pass
 
 
-def cmd_groovy(argv):
-    parser = OptionParser(usage="robot groovy",
-                          description="Changes the ROS distro for the PR2 to Groovy.")
-
-    (options, args) = parser.parse_args(argv)
-
-    checkslave()
-
-    if not check_claim(options.user, options.force):
-        sys.exit(2)
-
-    print("Setting your ROS Environment to ROS Groovy")
-
-    set_rosdistro_cmd = ['ln', '-sf', '/etc/ros/groovy', '/etc/ros/distro']
-    set_source_cmd = ['source', '/opt/ros/groovy/setup.bash']
-    set_ros_env_loader = ['export', 'ROS_ENV_LOADER=/etc/ros/env.sh']
-
-    subprocess.Popen(set_rosdistro_cmd, stdout = subprocess.PIPE)
-    print(stdout)
-    subprocess.Popen(set_source_cmd, stdout = subprocess.PIPE)
-    print(stdout)
-
-    print("Your environment is configured to use /opt/ros/groovy/setup.bash and /etc/ros/distro is symbolically linked to /etc/ros/groovy")
-  
-def cmd_hydro(argv):
-    parser = OptionParser(usage="robot hydro",
-                          description="Changes the ROS distro for the PR2 to Hydro.")
-
-    (options, args) = parser.parse_args(argv)
-
-    checkslave()
-
-    if not check_claim(options.user, options.force):
-        sys.exit(2)
-
-    print("Setting your ROS Environment to ROS Hydro")
-
-    set_rosdistro_cmd = ['ln', '-sf', '/etc/ros/hydro', '/etc/ros/distro']
-    set_source_cmd = ['source', '/opt/ros/hydro/setup.bash']
-    set_ros_env_loader = ['export', 'ROS_ENV_LOADER=/etc/ros/env.sh']
-    
-    subprocess.Popen(set_rosdistro_cmd, stdout = subprocess.PIPE)
-    print(stdout)
-    subprocess.Popen(set_source_cmd, stdout = subprocess.PIPE)
-    print(stdout)
-
-    print("Your environment is configured to use /opt/ros/hydro/setup.bash and /etc/ros/distro is symbolically linked to /etc/ros/hydro")
-
-
 def cmd_start(argv):
     parser = OptionParser(usage="robot start",
                           description="Bring up the robot.  This will first kill all processes running on the robot and then launch /etc/ros/robot.launch as a daemonized process.")
@@ -322,111 +273,6 @@ def cmd_stop(argv):
 
         print("If you are done using the robot, it is recommended that you run 'robot release'")
 
-    sys.exit(0)
-
-
-def cmd_dash(argv):
-    print("""
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMMMMMMMNMMMMMMMMMMM
-MMMMMMMMMMNMMMMMMMMMMmhhhhhhmMMMMMMMMMMNMMMMMMMMMM
-MMMMMMMMNNMMMMMMMMMMd::::::::hMMMMMMMMMMNNMMMMMMMM
-MMMMMMMNNMMMMMMMMMMh::::::::::yMMMMMMMMMMNNMMMMMMM
-MMMMMMNNMMMdhhhhhdN/:::::::::::mMmydddddymMNMMMMMM
-MMMMMNMMMMo:::::::sN+::::::::/mMdhMMMMMMMydMNMMMMM
-MMMMNMMMN+:::::::::+No::::::+NMhdMMMMMMMMMhhMNMMMM
-MMMNMMMMs:::::::::::yMMMMMMMMMMmyMMMMMMMMMymMMNNMM
-MNNMMMMMMs:::::::::yMMMMMMMMMMMMNsNMMMMMNsNMMMMNNM
-NNMMMMMMMMy:::::::hMMMMMMMMMMMMMMNhdddddhNMMMMMMNN
-mMMMMMMMMMMdhhhhhdMMMMMMMMMMMMMMmddddddMMMMMMMMMMN
-MNMMMMMMMMs:::::::yMMMMMMMMMMMMh:::::::oNMMMMMMMNN
-MMNMMMMMMo:::::::::oMMMMMMMMMMy:::::::::+NMMMMMNNM
-MMMNMMMMs:::::::::::yMmmmmmmNh:::::::::::+MMMMNMMM
-MMMMNMMMMo:::::::::oN+::::::/my:::::::::+NMMMNMMMM
-MMMMMNNMMMs:::::::ym/:::::::::dh:::::::oNMMMNMMMMM
-MMMMMMNNMMMmdddddmN/:::::::::::mmdddddmMMMNNMMMMMM
-MMMMMMMNNMMMMMMMMMMd::::::::::hMMMMMMMMMMNNMMMMMMM
-MMMMMMMMMNMMMMMMMMMMm/:::::::dMMMMMMMMMMNNMMMMMMMM
-MMMMMMMMMMNMMMMMMMMMMNddddddNMMMMMMMMMMNMMMMMMMMMM
-MMMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMMMMMMMNMMMMMMMMMMM
-MMMMMMMMMMMMNNNNNNNNNNNNNNNNNNNNNNNNNNMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-
-A boy with dreams had dreamt,
-That our feet and lives were meant
-for the sands of Mars.
-And by the hands of ours
-the lands of stars; humans were sent.
-
-He asked, please, the men,
-and the women, of the greatest alliance upon earth
-Please, our best is yet to come, to the sun,
-our work.
-
-To the stars we must go
-
-""")
-    sys.exit(0)
-
-def cmd_sudoaptgetbrycefixit(argv):
-    print("""
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMMMMMMMNMMMMMMMMMMM
-MMMMMMMMMMNMMMMMMMMMMmhhhhhhmMMMMMMMMMMNMMMMMMMMMM
-MMMMMMMMNNMMMMMMMMMMd::::::::hMMMMMMMMMMNNMMMMMMMM
-MMMMMMMNNMMMMMMMMMMh::::::::::yMMMMMMMMMMNNMMMMMMM
-MMMMMMNNMMMdhhhhhdN/:::::::::::mMmydddddymMNMMMMMM
-MMMMMNMMMMo:::::::sN+::::::::/mMdhMMMMMMMydMNMMMMM
-MMMMNMMMN+:::::::::+No::::::+NMhdMMMMMMMMMhhMNMMMM
-MMMNMMMMs:::::::::::yMMMMMMMMMMmyMMMMMMMMMymMMNNMM
-MNNMMMMMMs:::::::::yMMMMMMMMMMMMNsNMMMMMNsNMMMMNNM
-NNMMMMMMMMy:::::::hMMMMMMMMMMMMMMNhdddddhNMMMMMMNN
-mMMMMMMMMMMdhhhhhdMMMMMMMMMMMMMMmddddddMMMMMMMMMMN
-MNMMMMMMMMs:::::::yMMMMMMMMMMMMh:::::::oNMMMMMMMNN
-MMNMMMMMMo:::::::::oMMMMMMMMMMy:::::::::+NMMMMMNNM
-MMMNMMMMs:::::::::::yMmmmmmmNh:::::::::::+MMMMNMMM
-MMMMNMMMMo:::::::::oN+::::::/my:::::::::+NMMMNMMMM
-MMMMMNNMMMs:::::::ym/:::::::::dh:::::::oNMMMNMMMMM
-MMMMMMNNMMMmdddddmN/:::::::::::mmdddddmMMMNNMMMMMM
-MMMMMMMNNMMMMMMMMMMd::::::::::hMMMMMMMMMMNNMMMMMMM
-MMMMMMMMMNMMMMMMMMMMm/:::::::dMMMMMMMMMMNNMMMMMMMM
-MMMMMMMMMMNMMMMMMMMMMNddddddNMMMMMMMMMMNMMMMMMMMMM
-MMMMMMMMMMMNMMMMMMMMMMMMMMMMMMMMMMMMMMNMMMMMMMMMMM
-MMMMMMMMMMMMNNNNNNNNNNNNNNNNNNNNNNNNNNMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-Email Bryce (bvondervoort@clearpathrobotics.com).
-He'll fix it.
-""")
-    sys.exit(0)
-
-def cmd_love(argv):
-    p = subprocess.Popen(['fortune', 'love'], stdout=subprocess.PIPE)
-    (out, err) = p.communicate()
-    print("""
-          |  \ \ | |/ /
-          |  |\ `' ' /
-          |  ;'      \      / ,
-          | ;    _,   |    / / ,
-          | |   (  `-.;_,-' '-' ,
-          | `,   `-._       _,-'_
-          |,-`.    `.)    ,<_,-'_,
-         ,'    `.   /   ,'  `;-' _,
-        ;        `./   /`,    \-'
-        |         /   |  ;\   |\\
-        |        ;_,._|_,  `, ' \\
-        |        \    \ `       `,
-        `      __ `    \         ;,
-         \   ,'  `      \,       ;;
-          \_(            ;,      ;;
-          |  \           `;,     ;;
-          |  |`.          `;;,   ;'
-          |  |  `-.        ;;;;,;' FL
-          |  |    |`-.._  ,;;;;;'
-          |  |    |   | ``';;;'
-""")
-    print(out)
     sys.exit(0)
 
 
@@ -814,12 +660,7 @@ def robotmain(argv=None):
     cmds['stop']     = (cmd_stop,    'Stop all processes running on the robot and release control.')
     cmds['users']    = (cmd_users,   'Show all users on the robot.')
     cmds['plist']    = (cmd_plist,   'Show all processes running on the robot.')
-    cmds['love']     = (cmd_love,   '')
     cmds['kill']     = (cmd_stop,    '')
-    #cmds['sudoaptgetbrycefixit'] = (cmd_sudoaptgetbrycefixit, '')
-    #cmds['dash']     = (cmd_dash, '')
-    #cmds['hydro']    = (cmd_hydro, 'Changes the ROS Environment to Hydro; An ease of use command')
-    #cmds['groovy']   = (cmd_groovy, 'Changes the ROS Environment to Groovy; An ease of use command')
 
     if argv is None:
         argv=sys.argv
