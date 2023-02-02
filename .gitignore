@@ -1,0 +1,6 @@
+debian/.debhelper/*
+debian/files
+debian/pr2-core.debhelper.log
+debian/pr2-core.substvars
+debian/pr2-core/*
+obj-x86_64-linux-gnu/*
