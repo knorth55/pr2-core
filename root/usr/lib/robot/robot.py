@@ -331,6 +331,8 @@ def users(noplist=False):
             if len(users.keys()) > 0:
                 print("The following users have running processes:")
                 for key,val in users.items():
+                    if hasattr(key, 'decode'):
+                        key = key.decode('utf-8')
                     print(" * %s (%d)"%(key,val))
             else:
                 print("No non-system processes running.")
@@ -460,7 +462,7 @@ def plist():
     ckill_list = subprocess.Popen(['sudo', 'ckill', 'list'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     (o,e) = ckill_list.communicate()
     if ckill_list.returncode == 0:
-        return o.splitlines()
+        return [x.decode('utf-8') for x in o.splitlines()]
 #        return [l for l in o.splitlines() if not '/usr/lib/robot/robot.py' in l]
     else:
         return None
@@ -569,7 +571,7 @@ def ckill():
         print("PROGRESS".center(total_progress,"="))
 
         # Start by killing all roslaunch processes
-        subprocess.call(['sudo', 'ckill', 'kill', '--sig', lev, '--regex', 'python3 .*/roslaunch'])
+        subprocess.call(['sudo', 'ckill', 'kill', '--sig', lev, '--regex', 'ros[launch|master]'])
 
         for lev in ['SIGINT','SIGTERM','SIGKILL','SIGKILL']:
             start = time.time()
