@@ -330,7 +330,7 @@ def users(noplist=False):
 
             if len(users.keys()) > 0:
                 print("The following users have running processes:")
-                for key,val in users.iteritems():
+                for key,val in users.items():
                     print(" * %s (%d)"%(key,val))
             else:
                 print("No non-system processes running.")
