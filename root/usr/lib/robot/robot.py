@@ -586,6 +586,9 @@ def ckill():
                 time.sleep(.1)
                 last_count = count
                 count = kill_count()
+                if count is None:
+                    print("Could not run ckill.", file=sys.stderr)
+                    sys.exit(3)
                 if (count < last_count):
                     continue
                 if (time.time() - start > 3):
